@@ -112,11 +112,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	qb := qbittorrent.NewClient(qbittorrent.Config{
-		Host:     cfg.Server,
-		Username: cfg.Username,
-		Password: cfg.Password,
-	})
+	qbcfg := qbittorrent.Config{
+		Host: cfg.Server,
+	}
+
+	if cfg.Username != "" && cfg.Password != "" {
+		qbcfg.Username = cfg.Username
+		qbcfg.Password = cfg.Password
+	}
+
+	qb := qbittorrent.NewClient(qbcfg)
 
 	ctx := context.Background()
 
