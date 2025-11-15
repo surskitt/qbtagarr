@@ -48,7 +48,7 @@ func genWebhookHandler(cfg *Config, qb *qbittorrent.Client) func(c *gin.Context)
 		})
 
 		if err != nil {
-			log.Println("could not get torrents from client: %q", err)
+			log.Printf("could not get torrents from client: %q", err)
 			c.AbortWithStatus(http.StatusInternalServerError)
 		}
 
@@ -61,7 +61,7 @@ func genWebhookHandler(cfg *Config, qb *qbittorrent.Client) func(c *gin.Context)
 
 		u, err := url.Parse(t.Tracker)
 		if err != nil {
-			log.Println("could not parse tracker url: %q", err)
+			log.Printf("could not parse tracker url: %q", err)
 			c.AbortWithStatus(http.StatusInternalServerError)
 		}
 
