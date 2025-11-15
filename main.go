@@ -20,6 +20,8 @@ type CliArgs struct {
 
 type Config struct {
 	Server   string `yaml:"server" validate:"required"`
+	Username string `yaml:"username" validated:"required"`
+	Password string `yaml:"password" validated:"required"`
 	Trackers map[string][]string
 }
 
@@ -111,7 +113,9 @@ func main() {
 	}
 
 	qb := qbittorrent.NewClient(qbittorrent.Config{
-		Host: cfg.Server,
+		Host:     cfg.Server,
+		Username: cfg.Username,
+		Password: cfg.Password,
 	})
 
 	ctx := context.Background()
