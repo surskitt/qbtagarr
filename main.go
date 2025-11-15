@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/autobrr/go-qbittorrent"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-yaml"
@@ -51,6 +53,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	qb := qbittorrent.NewClient(qbittorrent.Config{
+		Host: cfg.Server,
+	})
+
+	ctx := context.Background()
+
+	if err = qb.LoginCtx(ctx); err != nil {
+		log.Fatalf("could not log into client: %q", err)
+	}
+
 	r := gin.Default()
 	r.POST("/api/webhook", func(c *gin.Context) {
 		infoHash := c.PostForm("infoHash")
@@ -60,7 +72,9 @@ func main() {
 			c.AbortWithStatus(http.StatusBadRequest)
 		}
 
-		log.Println(infoHash)
+		hashes := []string{infoHash}
+
+		qb.AddTags(hashes, "abc")
 	})
 
 	if err = r.Run(":8080"); err != nil {
