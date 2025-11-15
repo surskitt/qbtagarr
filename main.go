@@ -34,12 +34,6 @@ func stringInSlice(a string, list []string) bool {
 
 func genWebhookHandler(cfg *Config, qb *qbittorrent.Client) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		ctx := context.Background()
-
-		if err := qb.LoginCtx(ctx); err != nil {
-			log.Fatalf("could not log into client: %q", err)
-		}
-
 		infoHash := c.PostForm("infoHash")
 
 		if infoHash == "" {
@@ -119,6 +113,12 @@ func main() {
 	qb := qbittorrent.NewClient(qbittorrent.Config{
 		Host: cfg.Server,
 	})
+
+	ctx := context.Background()
+
+	if err := qb.LoginCtx(ctx); err != nil {
+		log.Fatalf("could not log into client: %q", err)
+	}
 
 	r := gin.Default()
 	r.POST("/api/webhook", genWebhookHandler(&cfg, qb))
