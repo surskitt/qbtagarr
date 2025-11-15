@@ -121,7 +121,10 @@ func main() {
 	}
 
 	r := gin.Default()
+
 	r.POST("/api/webhook", genWebhookHandler(&cfg, qb))
+
+	r.GET("/api/ping", func(c *gin.Context) {})
 
 	if err = r.Run(":8080"); err != nil {
 		log.Fatal(err)
